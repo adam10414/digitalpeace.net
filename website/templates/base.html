@@ -1,0 +1,38 @@
+<!--This will be the base HTMl applies to all digitalpeace pages.
+Other pages will extend this document.-->
+
+<html lang="en">
+
+<head>
+    {%block head %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Peace {%block title%}{%endblock %}</title>
+    <link type="text/css" rel="stylesheet" href="/static/css/base.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/jpg" href="/static/images/favicon.jpg" />
+    {%endblock%}
+</head>
+
+<body>
+
+    <div class="Navigation_bar">
+        <table>
+            <th><a href="/"><img src="static/images/logo_extra_smol.png"></a></th>
+            <th><a href="/">Home</a></th>
+            <th><a href="/austin">Austin</a></th>
+            <th><a href="/adam">Adam</a></th>
+            <th><a href="/about">About this Site</a></th>
+        </table>
+    </div>
+
+    <div class="content">
+        {%block content%}
+        {%endblock%}
+    </div>
+
+</body>
+
+</html>

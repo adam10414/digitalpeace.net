@@ -1,0 +1,19 @@
+.content{
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+.preview_portal{
+    display: inline-block;
+    margin: 30px 10px 5px 10px;
+}
+
+.preview_portal table {
+    border: solid #282a40;
+}
+
+.name_bar {
+    background-color: #282a40;
+    padding: 0px;
+}

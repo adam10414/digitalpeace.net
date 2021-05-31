@@ -2,3 +2,5 @@ auth/*
 utils/ip-grabber/save-data.json
 .vscode
 .DS_Store
+website/DS_Store
+website/__pycache__
