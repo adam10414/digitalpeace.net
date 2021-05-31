@@ -3,8 +3,9 @@
 Welcome to digitalpeace! This is the repo to our website.
 
 ## Get Started:
-This website runs using the Python Flask module. At the time of writing this, we're using Python 3.9.5.
+This website uses the Python Flask module. At the time of writing this, we're using Python 3.9.5.
 
+To get started: 
 - Clone this repo locally.
 - Navigate to the directory locally.
 - Run pip install -r requirements.txt
