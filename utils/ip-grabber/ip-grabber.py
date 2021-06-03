@@ -65,6 +65,8 @@ if os.path.exists('../../auth/aws_keys.json'):
         auth_dict = json.load(auth_file)
 
 else:
+    os.mkdir('../../auth')
+
     print(f"""
     It looks like you need to generate some access keys to use this script.
     Step 1: Navigate here and sign in: https://997723378435.signin.aws.amazon.com/console
