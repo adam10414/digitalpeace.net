@@ -65,7 +65,10 @@ if os.path.exists('../../auth/aws_keys.json'):
         auth_dict = json.load(auth_file)
 
 else:
-    os.mkdir('../../auth')
+    if os.path.exists('../../auth'):
+        pass
+    else:
+        os.mkdir('../../auth')
 
     print(f"""
     It looks like you need to generate some access keys to use this script.
