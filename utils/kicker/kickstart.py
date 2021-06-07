@@ -24,7 +24,7 @@ args = parser.parse_args()
 def get_temp_creds(): # ~just MFA things~
     creds = client.get_session_token(
         DurationSeconds=900, # i.e. 15 minutes
-        SerialNumber='arn:aws:iam::997723378435:mfa/austin-dev', # virtual only
+        SerialNumber='#GET FROM CONSOLE#', # virtual only
         TokenCode=input('enter the 6-digit code: ')
 )
 
