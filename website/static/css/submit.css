@@ -35,3 +35,17 @@
     background-color: #282a40;
     display: block;
 }
+
+.submission_table{
+    border-style: solid;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+}
+
+.submit_title{
+    background-color: #282a40;   
+}
+
+.submission_table tbody tr{
+}
