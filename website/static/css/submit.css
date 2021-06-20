@@ -1,0 +1,37 @@
+*{
+    color: #9a9a9a;
+    background-color: #151621;
+    font-family: 'Catamaran', sans-serif;
+    font-size: 20px;
+    box-sizing: border-box;
+}
+
+.Navigation_bar{
+    background-color: #282a40;
+    padding: 5px;
+    width: 100%;
+    height: 10%
+}
+
+.Navigation_bar table {
+    background-color: #282a40;
+}
+
+.Navigation_bar table th {
+    background-color: #282a40;
+}
+
+.Navigation_bar a {
+    display: table;
+    background-color: #282a40;
+    text-decoration: none;
+}
+
+.Navigation_bar a:hover {
+    text-decoration: underline;
+}
+
+.Navigation_bar img{
+    background-color: #282a40;
+    display: block;
+}

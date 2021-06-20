@@ -25,6 +25,11 @@ def adam():
     return render_template('adam.html')
 
 
+@server.route('/submit')
+def submit_post():
+    return render_template('submit.html')
+
+
 @server.errorhandler(404)
 def page_not_found(e):
     return render_template('not_found.html'), 404
