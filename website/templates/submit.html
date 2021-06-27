@@ -8,24 +8,35 @@
 {%endblock%}
 
 {%block content%}
-<table class='submission_table'>
-    <tr>
-        <th class='submit_title'>Submit a new post</th>
-    </tr>
-    <tr>
-        <td>{{template_form.title.label}} {{template_form.title}}</td>
-    </tr>
-    <tr>
-        <td>{{template_form.post_body.label}} {{template_form.post_body}}</td>
-    </tr>
-    <tr>
-        <td>{{template_form.image.label}} {{template_form.image}}</td>
-    </tr>
-    <tr>
-        <td>{{template_form.image_caption.label}} {{template_form.image_caption}}</td>
-    </tr>
-    <tr>
-        <td>{{template_form.submit}}</td>
-    </tr>
-</table>
+<form method='POST' enctype="multipart/form-data">
+    {{new_post.hidden_tag()}}
+    <table class='submission_table'>
+        <tr>
+            <th class='submit_title'>Submit a new post</th>
+        </tr>
+        <tr>
+            <td>{{new_post.title.label}} {{new_post.title}}</td>
+        </tr>
+        <tr>
+            <td>{{new_post.post_body.label}} {{new_post.post_body}}</td>
+        </tr>
+        <tr>
+            <td>{{new_post.image.label}} {{new_post.image}}</td>
+        </tr>
+        <tr>
+            <td>{{new_post.image_caption.label}} {{new_post.image_caption}}</td>
+        </tr>
+        <tr>
+            <td id='submit_cell'>{{new_post.submit}}</td>
+        </tr>
+    </table>
+    <p></p>
+
+</form>
+
+<p>Post Title: {{post_title}}</p>
+<p>Post Body: {{post_body}}</p>
+<p>Post image: <img src='/static/images/test/{{post_image_file_name}}'></p>
+<p>Post image caption: {{post_image_caption}}</p>
+
 {%endblock%}

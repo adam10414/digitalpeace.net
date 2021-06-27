@@ -1,17 +1,24 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, FileField, SubmitField
-from wtforms.validators import DataRequired
+from flask_wtf.file import FileField
+from wtforms import StringField, TextAreaField, SubmitField
+from wtforms.validators import InputRequired
 
 
 class NewPostSubmissionForm(FlaskForm):
-    title = StringField('Post Title: ', validators=[
-        DataRequired(),
-    ])
+    title = StringField('Post Title: ', validators=[InputRequired()])
 
-    post_body = TextAreaField('Post Body: ', validators=[DataRequired()])
+    post_body = TextAreaField('Post Body: ', validators=[InputRequired()])
 
-    image = FileField('Image Preview: ', validators=[DataRequired()])
+    #TODO:
+    #Limit file types to images only. (Will need to list all image file types.)
+    #Or figure out how to get this to work:
+    #FileAllowed(images, 'Images only please.')
+    #https://pythonhosted.org/Flask-WTF/form.html
 
-    image_caption = StringField('Image Captoin: ', validators=[DataRequired()])
+    #FileRequired() produces a bug where none of the form data is captured.
+    image = FileField('Image Preview: ', validators=[InputRequired()])
 
-    submit = SubmitField('Submit: ')
+    image_caption = StringField('Image Caption: ',
+                                validators=[InputRequired()])
+
+    submit = SubmitField('Submit')
