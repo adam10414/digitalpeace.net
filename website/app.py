@@ -33,3 +33,6 @@ def submit_post():
 @server.errorhandler(404)
 def page_not_found(e):
     return render_template('not_found.html'), 404
+
+
+#Example comment for commit
