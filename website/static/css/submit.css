@@ -35,3 +35,45 @@
     background-color: #282a40;
     display: block;
 }
+
+.submission_table{
+    border-style: solid;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+}
+
+.submit_title{
+    background-color: #282a40;   
+}
+
+#title {
+    border-radius: 5px;
+    border-style: solid;
+    font-family: sans-serif;
+    font-weight: lighter;
+    font-size: medium;
+}
+
+label #post_body{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#post_body{
+    border-radius: 5px;
+    border-style: solid;
+    font-family: sans-serif;
+    font-weight: lighter;
+    font-size: medium;
+}
+
+#image_caption{
+    border-radius: 5px;
+    border-style: solid;
+    font-family: sans-serif;
+    font-weight: lighter;
+    font-size: medium;
+}
+

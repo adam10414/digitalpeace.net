@@ -4,3 +4,6 @@ utils/ip-grabber/save-data.json
 .DS_Store
 website/DS_Store
 website/__pycache__
+save-data.json
+../.DS_Store
+website/static/images/test/*
