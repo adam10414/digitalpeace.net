@@ -9,7 +9,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 
-#from .forms import NewPostSubmissionForm
+from .forms import NewPostSubmissionForm
 
 server = Flask(__name__, static_url_path='/static')
 server.config['SECRET_KEY'] = 'my_secret'
