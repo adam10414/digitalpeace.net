@@ -7,8 +7,9 @@ import os
 from flask import Flask, render_template
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, String
 
-from .forms import NewPostSubmissionForm
+#from .forms import NewPostSubmissionForm
 
 server = Flask(__name__, static_url_path='/static')
 server.config['SECRET_KEY'] = 'my_secret'
@@ -24,7 +25,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), index=True)
 
-    posts = db.relationship('Post', backref=db.backref('posts', lazy=True))
+    #posts = db.relationship('Post', backref=db.backref('posts', lazy=True))
 
 
 class Post(db.Model):
@@ -34,7 +35,15 @@ class Post(db.Model):
     image_file_name = db.Column(db.String(), index=True, nullable=False)
     image_caption = db.Column(db.String(50), index=True, nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    __repr__ = f""""Post title: {title}
+    Post Body: {post_body}
+    Image File Name: {image_file_name}
+    Image Caption: {image_caption}"""
+
+
+#db.create_all()
 
 
 @server.route('/')
@@ -59,7 +68,7 @@ def adam():
 @server.route('/submit', methods=['GET', 'POST'])
 def submit_post():
 
-    new_post = NewPostSubmissionForm()
+    new_post_submission = NewPostSubmissionForm()
 
     #TODO:
     #Add logic to determine user, and post to the appropriate page.
@@ -67,14 +76,15 @@ def submit_post():
     #Limit number of posts by IP if not logged in. (3 posts should be enough for testing.)
 
     #Do stuff with the form data here:
-    if new_post.validate_on_submit():
+    if new_post_submission.validate_on_submit():
         print("Form submitted!")
-        post_title = new_post.title.data
-        post_body = new_post.post_body.data
-        post_image_caption = new_post.image_caption.data
 
-        post_image_file_name = new_post.image.data.filename
-        post_image = new_post.image.data
+        post_title = new_post_submission.title.data
+        post_body = new_post_submission.post_body.data
+        post_image_caption = new_post_submission.image_caption.data
+
+        post_image_file_name = new_post_submission.image.data.filename
+        post_image = new_post_submission.image.data
 
         #TODO:
         #Find a faster way of doing this.
@@ -90,7 +100,7 @@ def submit_post():
             post_image_file_name = post_image_file_name[:post_image_file_name.
                                                         find('.')]
 
-            post_image_file_name = post_image_file_name + str(counter)
+            post_image_file_name += str(counter)
             counter += 1
 
             #Adding the file extension back to the image.
@@ -109,8 +119,22 @@ def submit_post():
 
         post_image.save(f'./static/images/post_images/{post_image_file_name}')
 
+        new_post = Post(title=post_title,
+                        post_body=post_body,
+                        image_file_name=post_image_file_name,
+                        image_caption=post_image_caption)
+
+        try:
+            db.session.add(new_post)
+            db.session.commit()
+            print("Stuff added to db!")
+
+        except Exception as error:
+            print(error)
+            db.session.rollback()
+
         return render_template('submit.html',
-                               new_post=new_post,
+                               new_post_submission=new_post_submission,
                                post_title=post_title,
                                post_body=post_body,
                                post_image=post_image,
@@ -118,7 +142,8 @@ def submit_post():
                                post_image_file_name=post_image_file_name)
 
     else:
-        return render_template('submit.html', new_post=new_post)
+        return render_template('submit.html',
+                               new_post_submission=new_post_submission)
 
 
 @server.errorhandler(404)

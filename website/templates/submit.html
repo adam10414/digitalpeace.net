@@ -9,25 +9,25 @@
 
 {%block content%}
 <form method='POST' enctype="multipart/form-data">
-    {{new_post.hidden_tag()}}
+    {{new_post_submission.hidden_tag()}}
     <table class='submission_table'>
         <tr>
             <th class='submit_title'>Submit a new post</th>
         </tr>
         <tr>
-            <td>{{new_post.title.label}} {{new_post.title}}</td>
+            <td>{{new_post_submission.title.label}} {{new_post_submission.title}}</td>
         </tr>
         <tr>
-            <td>{{new_post.post_body.label}} {{new_post.post_body}}</td>
+            <td>{{new_post_submission.post_body.label}} {{new_post_submission.post_body}}</td>
         </tr>
         <tr>
-            <td>{{new_post.image.label}} {{new_post.image}}</td>
+            <td>{{new_post_submission.image.label}} {{new_post_submission.image}}</td>
         </tr>
         <tr>
-            <td>{{new_post.image_caption.label}} {{new_post.image_caption}}</td>
+            <td>{{new_post_submission.image_caption.label}} {{new_post_submission.image_caption}}</td>
         </tr>
         <tr>
-            <td id='submit_cell'>{{new_post.submit}}</td>
+            <td id='submit_cell'>{{new_post_submission.submit}}</td>
         </tr>
     </table>
     <p></p>
