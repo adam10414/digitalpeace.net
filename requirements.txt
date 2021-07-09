@@ -32,8 +32,6 @@ pyasn1-modules==0.2.8
 pycparser==2.20
 pylint==2.6.0
 pynput==1.7.2
-pyobjc-framework-Cocoa==7.1
-pyobjc-framework-Quartz==7.1
 pyparsing==2.4.7
 python-dateutil==2.8.1
 pytz==2020.4
