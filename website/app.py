@@ -6,10 +6,9 @@ import os
 
 from flask import Flask, render_template
 from flask_wtf.csrf import CSRFProtect
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String
 
-from .forms import NewPostSubmissionForm
+from forms import NewPostSubmissionForm
+from models import db, Posts
 
 server = Flask(__name__, static_url_path='/static')
 server.config['SECRET_KEY'] = 'my_secret'
@@ -18,32 +17,7 @@ server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 csrf = CSRFProtect(server)
 
-db = SQLAlchemy(server)
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), index=True)
-
-    #posts = db.relationship('Post', backref=db.backref('posts', lazy=True))
-
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(20), index=True, nullable=False)
-    post_body = db.Column(db.String(), index=False, nullable=False)
-    image_file_name = db.Column(db.String(), index=True, nullable=False)
-    image_caption = db.Column(db.String(50), index=True, nullable=False)
-
-    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    __repr__ = f""""Post title: {title}
-    Post Body: {post_body}
-    Image File Name: {image_file_name}
-    Image Caption: {image_caption}"""
-
-
-#db.create_all()
+db.init_app(server)
 
 
 @server.route('/')
@@ -119,10 +93,10 @@ def submit_post():
 
         post_image.save(f'./static/images/post_images/{post_image_file_name}')
 
-        new_post = Post(title=post_title,
-                        post_body=post_body,
-                        image_file_name=post_image_file_name,
-                        image_caption=post_image_caption)
+        new_post = Posts(title=post_title,
+                         post_body=post_body,
+                         image_file_name=post_image_file_name,
+                         image_caption=post_image_caption)
 
         try:
             db.session.add(new_post)
