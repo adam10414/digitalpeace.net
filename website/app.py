@@ -9,6 +9,7 @@ from flask_wtf.csrf import CSRFProtect
 
 from forms import NewPostSubmissionForm
 from models import db, Posts
+from utils.app_utils.file_handling import no_duplicate_files
 
 server = Flask(__name__, static_url_path='/static')
 server.config['SECRET_KEY'] = 'my_secret'
@@ -58,38 +59,13 @@ def submit_post():
         post_image_caption = new_post_submission.image_caption.data
 
         post_image_file_name = new_post_submission.image.data.filename
+        #Sanitizing input.
+        post_image_file_name = post_image_file_name.replace(" ", "")
+
         post_image = new_post_submission.image.data
 
-        #TODO:
-        #Find a faster way of doing this.
-
-        #Checking to see if the file name exists already, and if so, append a number to the end of the filename.
-        counter = 2
-        while os.path.exists(
-                f'./static/images/post_images/{post_image_file_name}'):
-
-            #Temporarily removing the file extension, and inserting the counter.
-            file_extension = post_image_file_name[post_image_file_name.find('.'
-                                                                            ):]
-            post_image_file_name = post_image_file_name[:post_image_file_name.
-                                                        find('.')]
-
-            post_image_file_name += str(counter)
-            counter += 1
-
-            #Adding the file extension back to the image.
-            post_image_file_name += file_extension
-
-            #TODO:
-            #Currently this counter will append numbers to the end of the file name like this:
-            #test.jpg
-            #test2.jpg
-            #test23.jpg
-            #test.234.jpg
-            #etc...
-
-            #While totally unimportant, but a nice to have:
-            #Find a way to increment the filename by 1, rather than just appending a number to the end of the filename.
+        post_image_file_name = no_duplicate_files(
+            post_image_file_name, './static/images/post_images/')
 
         post_image.save(f'./static/images/post_images/{post_image_file_name}')
 
