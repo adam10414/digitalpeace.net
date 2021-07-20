@@ -2,13 +2,11 @@
 This Flask app contains all of the routes necessary to run digitalpeace.net
 """
 
-import os
-
 from flask import Flask, render_template
 from flask_wtf.csrf import CSRFProtect
 
 from forms import NewPostSubmissionForm
-from models import db, Posts
+from models import Posts, session
 from utils.app_utils.file_handling import no_duplicate_files
 
 server = Flask(__name__, static_url_path='/static')
@@ -17,8 +15,6 @@ server.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///digitalpeaceDB.db'
 server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 csrf = CSRFProtect(server)
-
-db.init_app(server)
 
 
 @server.route('/')
@@ -85,13 +81,13 @@ def submit_post():
                          image_caption=post_image_caption)
 
         try:
-            db.session.add(new_post)
-            db.session.commit()
+            session.add(new_post)
+            session.commit()
             print("A new post has been added to db!")
 
         except Exception as error:
             print(error)
-            db.session.rollback()
+            session.rollback()
 
         return render_template('submit.html',
                                new_post_submission=new_post_submission,
