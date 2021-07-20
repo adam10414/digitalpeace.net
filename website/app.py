@@ -36,8 +36,18 @@ def adam():
     return render_template('adam.html')
 
 
-#TODO:
-#Add a guest page for randos on the internet to post to. (Low priority)
+@server.route('/guest')
+def guest():
+    """
+    This route will display all submissions posted by non-members.
+    Initially, this will be a testing ground for us.
+    Later on, hopefully prospective employers will post here.
+    """
+
+    # TODO:
+    # Limit number of posts to 3 per IP address.
+
+    return render_template('guest.html')
 
 
 @server.route('/submit', methods=['GET', 'POST'])
@@ -77,7 +87,7 @@ def submit_post():
         try:
             db.session.add(new_post)
             db.session.commit()
-            print("Stuff added to db!")
+            print("A new post has been added to db!")
 
         except Exception as error:
             print(error)
