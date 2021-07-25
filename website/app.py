@@ -31,6 +31,11 @@ def adam():
     return render_template('adam.html')
 
 
+@server.route('/guest')
+def guest():
+    return render_template('guest.html')
+
+
 @server.route('/post/<int:post_id>')
 def post(post_id):
     """
@@ -42,18 +47,26 @@ def post(post_id):
     post = session.query(Posts).filter(Posts.id == post_id).first()
 
     if not post:
-        return redirect('not_found.html', 404)
+        return render_template('not_found.html')
 
     post_title = post.title
     post_body = post.post_body
     image_file_name = post.image_file_name
     caption = post.image_caption
-    # TODO:
-    # Limit number of posts to 3 per IP address.
+
+    # Parsing out new lines from the post body.
+    lines = []
+    line = ''
+    for character in post_body:
+        if character != '\n':
+            line += character
+        else:
+            lines.append(line)
+            line = ''
 
     return render_template('post.html',
                            title=post_title,
-                           body=post_body,
+                           body=lines,
                            image_file_name=image_file_name,
                            caption=caption)
 
@@ -79,6 +92,13 @@ def submit_post():
         post_image_file_name = new_post_submission.image.data.filename
         #Sanitizing input.
         post_image_file_name = post_image_file_name.replace(" ", "")
+
+        # Adding final new line to file.
+        post_body += '\n'
+
+        # TODO:
+        # Humans separate paragraphs by 2 new lines.
+        # Need to convert this to 1 new line after post has been submitted.
 
         post_image = new_post_submission.image.data
 

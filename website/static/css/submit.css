@@ -81,3 +81,7 @@ label #post_body{
     margin: 0;
     font-size: small;
 }
+
+button{
+    border-radius: 12px;
+}

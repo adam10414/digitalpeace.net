@@ -35,3 +35,21 @@
     background-color: #282a40;
     display: block;
 }
+
+button{
+    border-radius: 12px;
+
+}
+
+button:hover{
+    background-color: #393c5c;
+}
+
+
+.button{
+    border-radius: 12px;
+}
+
+.button:hover{
+    background-color: #393c5c;
+}
