@@ -1,8 +1,7 @@
 """
 This Flask app contains all of the routes necessary to run digitalpeace.net
 """
-
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from flask_wtf.csrf import CSRFProtect
 
 from forms import NewPostSubmissionForm
@@ -32,23 +31,27 @@ def adam():
     return render_template('adam.html')
 
 
-@server.route('/guest')
-def guest():
+@server.route('/post/<int:post_id>')
+def post(post_id):
     """
     This route will display all submissions posted by non-members.
-    Initially, this will be a testing ground for us.
+    Initially, this will be a posting ground for us.
     Later on, hopefully prospective employers will post here.
     """
 
-    test = session.query(Posts).first()
-    post_title = test.title
-    post_body = test.post_body
-    image_file_name = test.image_file_name
-    caption = test.image_caption
+    post = session.query(Posts).filter(Posts.id == post_id).first()
+
+    if not post:
+        return redirect('not_found.html', 404)
+
+    post_title = post.title
+    post_body = post.post_body
+    image_file_name = post.image_file_name
+    caption = post.image_caption
     # TODO:
     # Limit number of posts to 3 per IP address.
 
-    return render_template('guest.html',
+    return render_template('post.html',
                            title=post_title,
                            body=post_body,
                            image_file_name=image_file_name,
@@ -63,7 +66,7 @@ def submit_post():
     #TODO:
     #Add logic to determine user, and post to the appropriate page.
     #If no user is logged in, then it should post the guest page.
-    #Limit number of posts by IP if not logged in. (3 posts should be enough for testing.)
+    #Limit number of posts by IP if not logged in. (3 posts should be enough for posting.)
 
     #Do stuff with the form data here:
     if new_post_submission.validate_on_submit():

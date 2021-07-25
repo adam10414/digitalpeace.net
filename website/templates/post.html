@@ -1,0 +1,19 @@
+{%extends "base.html" %}
+
+{%block title%}Developer: Adam Dugas{%endblock%}
+
+{%block head%}
+{{super()}}
+<link type="text/css" rel="stylesheet" href="/static/css/post.css">
+{%endblock%}
+
+{%block content%}
+<h1>{{title}}</h1>
+<figure class=post_image>
+    <img src=/static/images/post_images/{{image_file_name}}>
+    <figcaption>{{caption}}</figcaption>
+</figure>
+
+<p>{{body}}</p>
+
+{%endblock%}
