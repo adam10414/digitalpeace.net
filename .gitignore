@@ -7,3 +7,4 @@ website/__pycache__
 save-data.json
 ../.DS_Store
 website/static/images/test/*
+dp-env

@@ -1,15 +1,12 @@
 """
 This Flask app contains all of the routes necessary to run digitalpeace.net
 """
-
-import os
-
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from flask_wtf.csrf import CSRFProtect
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String
 
-from .forms import NewPostSubmissionForm
+from forms import NewPostSubmissionForm
+from models import Posts, session
+from utils.app_utils.file_handling import no_duplicate_files
 
 server = Flask(__name__, static_url_path='/static')
 server.config['SECRET_KEY'] = 'my_secret'
@@ -17,33 +14,6 @@ server.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///digitalpeaceDB.db'
 server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 csrf = CSRFProtect(server)
-
-db = SQLAlchemy(server)
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), index=True)
-
-    #posts = db.relationship('Post', backref=db.backref('posts', lazy=True))
-
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(20), index=True, nullable=False)
-    post_body = db.Column(db.String(), index=False, nullable=False)
-    image_file_name = db.Column(db.String(), index=True, nullable=False)
-    image_caption = db.Column(db.String(50), index=True, nullable=False)
-
-    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    __repr__ = f""""Post title: {title}
-    Post Body: {post_body}
-    Image File Name: {image_file_name}
-    Image Caption: {image_caption}"""
-
-
-#db.create_all()
 
 
 @server.route('/')
@@ -61,8 +31,47 @@ def adam():
     return render_template('adam.html')
 
 
-#TODO:
-#Add a guest page for randos on the internet to post to. (Low priority)
+@server.route('/guest')
+def guest():
+
+    posts = session.query(Posts).all()
+
+    return render_template('guest.html', posts=posts)
+
+
+@server.route('/post/<int:post_id>')
+def post(post_id):
+    """
+    This route will display all submissions posted by non-members.
+    Initially, this will be a posting ground for us.
+    Later on, hopefully prospective employers will post here.
+    """
+
+    post = session.query(Posts).filter(Posts.id == post_id).first()
+
+    if not post:
+        return render_template('not_found.html')
+
+    post_title = post.title
+    post_body = post.post_body
+    image_file_name = post.image_file_name
+    caption = post.image_caption
+
+    # Parsing out new lines from the post body.
+    lines = []
+    line = ''
+    for character in post_body:
+        if character != '\n':
+            line += character
+        else:
+            lines.append(line)
+            line = ''
+
+    return render_template('post.html',
+                           title=post_title,
+                           body=lines,
+                           image_file_name=image_file_name,
+                           caption=caption)
 
 
 @server.route('/submit', methods=['GET', 'POST'])
@@ -73,7 +82,7 @@ def submit_post():
     #TODO:
     #Add logic to determine user, and post to the appropriate page.
     #If no user is logged in, then it should post the guest page.
-    #Limit number of posts by IP if not logged in. (3 posts should be enough for testing.)
+    #Limit number of posts by IP if not logged in. (3 posts should be enough for posting.)
 
     #Do stuff with the form data here:
     if new_post_submission.validate_on_submit():
@@ -84,54 +93,36 @@ def submit_post():
         post_image_caption = new_post_submission.image_caption.data
 
         post_image_file_name = new_post_submission.image.data.filename
+        #Sanitizing input.
+        post_image_file_name = post_image_file_name.replace(" ", "")
+
+        # Adding final new line to file.
+        post_body += '\n'
+
+        # TODO:
+        # Humans separate paragraphs by 2 new lines.
+        # Need to convert this to 1 new line after post has been submitted.
+
         post_image = new_post_submission.image.data
 
-        #TODO:
-        #Find a faster way of doing this.
-
-        #Checking to see if the file name exists already, and if so, append a number to the end of the filename.
-        counter = 2
-        while os.path.exists(
-                f'./static/images/post_images/{post_image_file_name}'):
-
-            #Temporarily removing the file extension, and inserting the counter.
-            file_extension = post_image_file_name[post_image_file_name.find('.'
-                                                                            ):]
-            post_image_file_name = post_image_file_name[:post_image_file_name.
-                                                        find('.')]
-
-            post_image_file_name += str(counter)
-            counter += 1
-
-            #Adding the file extension back to the image.
-            post_image_file_name += file_extension
-
-            #TODO:
-            #Currently this counter will append numbers to the end of the file name like this:
-            #test.jpg
-            #test2.jpg
-            #test23.jpg
-            #test.234.jpg
-            #etc...
-
-            #While totally unimportant, but a nice to have:
-            #Find a way to increment the filename by 1, rather than just appending a number to the end of the filename.
+        post_image_file_name = no_duplicate_files(
+            post_image_file_name, './static/images/post_images/')
 
         post_image.save(f'./static/images/post_images/{post_image_file_name}')
 
-        new_post = Post(title=post_title,
-                        post_body=post_body,
-                        image_file_name=post_image_file_name,
-                        image_caption=post_image_caption)
+        new_post = Posts(title=post_title,
+                         post_body=post_body,
+                         image_file_name=post_image_file_name,
+                         image_caption=post_image_caption)
 
         try:
-            db.session.add(new_post)
-            db.session.commit()
-            print("Stuff added to db!")
+            session.add(new_post)
+            session.commit()
+            print("A new post has been added to db!")
 
         except Exception as error:
             print(error)
-            db.session.rollback()
+            session.rollback()
 
         return render_template('submit.html',
                                new_post_submission=new_post_submission,

@@ -77,3 +77,11 @@ label #post_body{
     font-size: medium;
 }
 
+.image_warning{
+    margin: 0;
+    font-size: small;
+}
+
+button{
+    border-radius: 12px;
+}
