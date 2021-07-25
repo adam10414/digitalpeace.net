@@ -40,10 +40,19 @@ def guest():
     Later on, hopefully prospective employers will post here.
     """
 
+    test = session.query(Posts).first()
+    post_title = test.title
+    post_body = test.post_body
+    image_file_name = test.image_file_name
+    caption = test.image_caption
     # TODO:
     # Limit number of posts to 3 per IP address.
 
-    return render_template('guest.html')
+    return render_template('guest.html',
+                           title=post_title,
+                           body=post_body,
+                           image_file_name=image_file_name,
+                           caption=caption)
 
 
 @server.route('/submit', methods=['GET', 'POST'])

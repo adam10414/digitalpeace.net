@@ -50,6 +50,6 @@ session = Session()
 # Testing...
 test = session.query(Posts).first()
 
-print(test)
+print(test.title)
 
 #db.create_all()
