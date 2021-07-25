@@ -4,9 +4,23 @@
 
 {%block head%}
 {{super()}}
-<link type="text/css" rel="stylesheet" href="/static/css/adam.css">
+<link type="text/css" rel="stylesheet" href="/static/css/gallery.css">
 {%endblock%}
 
 {%block content%}
+
+{%for post in posts%}
+<table class="posts">
+    <tr>
+        <td>
+            <div class="Post Title"><a href="/post/{{post.id}}">{{post.title}}</a></div>
+            <figure>
+                <a href="/post/{{post.id}}"><img src='/static/images/post_images/{{post.image_file_name}}'></a>
+                <figcaption>{{post.image_caption}}</figcaption>
+            </figure>
+        </td>
+    </tr>
+</table>
+{%endfor%}
 
 {%endblock%}

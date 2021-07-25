@@ -33,7 +33,10 @@ def adam():
 
 @server.route('/guest')
 def guest():
-    return render_template('guest.html')
+
+    posts = session.query(Posts).all()
+
+    return render_template('guest.html', posts=posts)
 
 
 @server.route('/post/<int:post_id>')
