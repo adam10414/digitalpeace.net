@@ -3,6 +3,7 @@ This Flask app contains all of the routes necessary to run digitalpeace.net
 """
 from flask import Flask, render_template, redirect
 from flask_wtf.csrf import CSRFProtect
+from sqlalchemy.sql.expression import desc
 
 from forms import NewPostSubmissionForm
 from models import Posts, session
@@ -124,13 +125,9 @@ def submit_post():
             print(error)
             session.rollback()
 
-        return render_template('submit.html',
-                               new_post_submission=new_post_submission,
-                               post_title=post_title,
-                               post_body=post_body,
-                               post_image=post_image,
-                               post_image_caption=post_image_caption,
-                               post_image_file_name=post_image_file_name)
+        new_post_id = session.query(Posts).order_by(desc(Posts.id)).first().id
+
+        return redirect(f"/post/{new_post_id}")
 
     else:
         return render_template('submit.html',
